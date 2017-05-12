@@ -45,7 +45,7 @@ app.get('/download', passport.authenticate('digest', { session: false }), (req, 
     // res.charset = 'utf-8'
     if (req.query.title === undefined) return res.send('....')
     console.log(req.query.title)
-    res.setHeader("Content-Disposition", "attachment; filename=" + encodeURIComponent(req.query.title) + ".webm")
+    res.setHeader("Content-Disposition", "attachment; filename=" + encodeURIComponent(req.query.title) + ".opus")
     ytdl(req.query.videoid, { quality: 'highest', filter: 'audioonly' }).pipe(res)
     // let obj = ytdl(req.query.videoid, { quality: 'highest', filter: 'audioonly' })
     // // res.send(obj)

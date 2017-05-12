@@ -32,7 +32,7 @@
                     if (this.readyState === 4 && this.status === 200) {
                         document.getElementById('thumbnail').style.backgroundImage = "url(" + this.response.thumbnail + ")";
                         document.getElementById('title').innerText = this.response.title;
-                        let rename = this.response.replace(/\\|\/|:|\*|\?|"|<|>|\|/ig, '_')
+                        let rename = (this.response.title).replace(/\\|\/|:|\*|\?|"|<|>|\|/ig, '_')
                         document.getElementById('download-audio').setAttribute('href', 'download?videoid=' + document.getElementById('videoid').value + '&title=' + rename);
                     }
                 }
