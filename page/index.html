@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<link href="style.css" rel="stylesheet">-->
+    <style type="text/css">
+        body {
+            background-color: #111;
+        }
+        
+        input[type=text] {
+            width: 70%;
+            padding: 5px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+    </style>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+    <script>
+        window.onload = () => {
+            document.getElementById('getinfo').addEventListener('click', () => {
+                let xhttp = new XMLHttpRequest();
+                xhttp.responseType = 'json';
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        document.getElementById('thumbnail').style.backgroundImage = "url(" + this.response.thumbnail + ")";
+                        document.getElementById('title').innerText = this.response.title;
+                        let rename = this.response.replace(/\\|\/|:|\*|\?|"|<|>|\|/ig, '_')
+                        document.getElementById('download-audio').setAttribute('href', 'download?videoid=' + document.getElementById('videoid').value + '&title=' + rename);
+                    }
+                }
+                xhttp.open("GET", "info?videoid=" + document.getElementById('videoid').value, true);
+                xhttp.send();
+            });
+            //
+            // document.getElementById('filesize').addEventListener('click', () => {
+                
+            // });
+
+            //
+            // function updateProgress(oEvent) {
+            //     if (oEvent.lengthComputable) {
+            //         var percentComplete = oEvent.loaded / oEvent.total;
+            //         console.log(percentComplete);
+            //         // ...
+            //     } else {
+            //         // Unable to compute progress information since the total size is unknown
+            //         console.log(oEvent)
+            //     }
+            // }
+        };
+    </script>
+</head>
+
+<body>
+    <div style="width:850px; height: 400px; background-color: #333; margin: 0 auto; text-align: center;">
+        <span style="font-size: 45px;">Youtube Downloader</span>
+        <input type="text" placeholder="VideoID" id="videoid">
+        <button id="getinfo">Get</button>
+        <div style="float: left;">
+            <div id="thumbnail" style="margin-left: 10px; width:512px; height:288px; background-color: #444; background-size: cover; background-position: center;"></div>
+        </div>
+        <div>
+            Title: <span id="title">N/A</span>
+            <br /> Duration: <span id="duration">N/A</span>
+            <br /> Info: <span id="info">N/A</span>
+            <br /> Filesize: <span id="filesize">N/A</span>
+            <br /> Download:
+            <br /> Audio Only: <a id="download-audio" download>Unavailable</a>
+            <!--<video controls="" autoplay="" name="media">
+                <source src="http://127.0.0.1:8080/download?videoid=https://www.youtube.com/watch?v=Cbc754jcjnE" type="video/webm">
+            </video>-->
+        </div>
+    </div>
+</body>
+
+</html>
