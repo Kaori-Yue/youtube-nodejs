@@ -10,7 +10,14 @@
         body {
             background-color: #111;
         }
-        
+
+        .available {
+            color: blue
+        }
+        .available:hover {
+            cursor: pointer
+        }
+
         input[type=text] {
             width: 70%;
             padding: 5px 20px;
@@ -32,8 +39,33 @@
                     if (this.readyState === 4 && this.status === 200) {
                         document.getElementById('thumbnail').style.backgroundImage = "url(" + this.response.thumbnail + ")";
                         document.getElementById('title').innerText = this.response.title;
-                        let rename = (this.response.title).replace(/\\|\/|:|\*|\?|"|<|>|\|/ig, '_')
-                        document.getElementById('download-audio').setAttribute('href', 'download?videoid=' + document.getElementById('videoid').value + '&title=' + rename);
+                        // let _rename = (this.response.title).replace(/\\|\/|:|\*|\?|"|<|>|\|/ig, '_')
+                        // let rename = _rename.replace('&', '%26')
+                        // console.log(rename)
+                        // document.getElementById('download-audio').setAttribute('href', 'download?videoid=' + document.getElementById('videoid').value + '&title=' + encodeURIComponent(_rename));
+                        document.querySelector('#download-audio').innerHTML = 'Available'
+                        document.querySelector('#download-audio').setAttribute('class', 'available')
+                        document.querySelector('#download-audio').addEventListener('click', () => {
+                            document.querySelector('#download-audio').removeAttribute('class')
+                            document.querySelector('#download-audio').innerHTML = 'Unavailable'
+                            fetch('/download', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    title: this.response.title,
+                                    videoid: document.getElementById('videoid').value
+                                })
+                            }).then(res => {
+                                return res.blob()
+                            }).then(data => {
+                                let a = document.createElement("a");
+                                a.download = document.getElementById('title').innerText
+                                a.href = window.URL.createObjectURL(new Blob([data]))
+                                a.click()
+                            })
+                        }, { once: true })
                     }
                 }
                 xhttp.open("GET", "info?videoid=" + document.getElementById('videoid').value, true);
@@ -41,7 +73,7 @@
             });
             //
             // document.getElementById('filesize').addEventListener('click', () => {
-                
+
             // });
 
             //

@@ -1,6 +1,7 @@
 const Strategy = require('passport-http').DigestStrategy
 const passport = require('passport')
 const express = require('express')
+const bodyParser = require('body-parser')
 const app = express()
 const ytdl = require('ytdl-core')
 const db = require('./users.js');
@@ -13,6 +14,8 @@ function logger(req, res, next) {
 }
 
 app.use(logger)
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 passport.use(new Strategy({ qop: 'auth' },
     function (username, cb) {
@@ -40,13 +43,16 @@ app.get('/info', passport.authenticate('digest', { session: false }), (req, res)
     })
 })
 // ==============================================
-app.get('/download', passport.authenticate('digest', { session: false }), (req, res) => {
+app.post('/download', (req, res) => {
     // let m = ytdl(req.query.videoid, { quality: 'highest', filter: 'audioonly' })
     // res.charset = 'utf-8'
-    if (req.query.title === undefined) return res.send('....')
-    console.log(req.query.title)
-    res.setHeader("Content-Disposition", "attachment; filename=" + encodeURIComponent(req.query.title) + ".opus")
-    ytdl(req.query.videoid, { quality: 'highest', filter: 'audioonly' }).pipe(res)
+    if (req.body.title === undefined) return res.send('....')
+    console.log(req.body.title)
+    // let rename = (req.query.title).replace('%2526', '&')
+    // let rename = req.body.title
+    // console.log(rename)
+    // res.setHeader("Content-Disposition", "attachment; filename=" + encodeURI(req.body.title) + ".opus")
+    ytdl(req.body.videoid, { quality: 'highest', filter: 'audioonly' }).pipe(res)
     // let obj = ytdl(req.query.videoid, { quality: 'highest', filter: 'audioonly' })
     // // res.send(obj)
     // // obj.pipe(res)

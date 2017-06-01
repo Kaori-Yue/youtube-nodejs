@@ -9,9 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.2",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
-    "ytdl-core": "^0.13.1"
+    "ytdl-core": "^0.13.3"
   }
 }
